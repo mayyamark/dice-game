@@ -1,9 +1,10 @@
-import { Typography } from "@mui/material";
+import { styled } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
 import { useState } from "react";
 import useFetch from "../../hook/useFetch";
 import { getToken } from "../../services/manage-token";
@@ -22,29 +23,66 @@ const DEFAULT_DICE_VALUES = {
   diceFaces: [DEFAULT_FACE_VALUES],
 };
 
+const Input = styled(TextField)(({ theme }) => ({
+  width: "100%",
+  marginBottom: theme.spacing(3),
+}));
+
+const DashedBox = styled(Box)({
+  border: "1px dashed #1976d2",
+});
+
+const Title = styled(Typography)(({ theme }) => ({
+  fontSize: 24,
+  marginBottom: theme.spacing(2),
+}));
+
 const ModeratorDashboard = () => {
   const [newDice, setNewDice] = useState(DEFAULT_DICE_VALUES);
 
   const { loading, makeApiCall } = useFetch();
 
+  const handleClearForm = () => {
+    setNewDice(DEFAULT_DICE_VALUES);
+  };
+
+  const handleSubmit = async () => {
+    await makeApiCall(
+      {
+        route: "/dice",
+        options: {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${getToken()}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newDice),
+        },
+      },
+      {
+        callback: (data) => {
+          console.log(data);
+          handleClearForm();
+        },
+        message: "Successfully created a new preset!",
+      }
+    );
+  };
+
   return (
     <Layout>
       <AppBar linkHref="/play" linkText="Roll Dice" />
-
       <Typography variant="h2" textAlign="center">
         Create a dice preset
       </Typography>
       <Box mb={4}>
-        <Typography sx={{ fontSize: 24, marginBottom: 2 }}>
-          Generic options
-        </Typography>
-        <Box p={2} mb={2} sx={{ border: "1px dashed #1976d2" }}>
-          <TextField
+        <Title>Generic options</Title>
+        <DashedBox p={2} mb={2}>
+          <Input
             error={newDice.faces === 0}
             required
             value={newDice.faces}
             disabled={loading}
-            sx={{ width: "100%", marginBottom: 3 }}
             label="Number of faces"
             variant="outlined"
             type="number"
@@ -55,11 +93,9 @@ const ModeratorDashboard = () => {
               }))
             }
           />
-
-          <TextField
+          <Input
             required
             disabled={loading}
-            sx={{ width: "100%", marginBottom: 3 }}
             label="Shape type"
             variant="outlined"
             value={newDice.shape}
@@ -70,18 +106,12 @@ const ModeratorDashboard = () => {
               }))
             }
           />
-        </Box>
-
+        </DashedBox>
         <Box>
-          <Typography sx={{ fontSize: 24, marginBottom: 2 }}>Faces</Typography>
+          <Title>Faces</Title>
           {newDice.diceFaces.map((face, index) => {
             return (
-              <Box
-                p={2}
-                mb={2}
-                key={index}
-                sx={{ border: "1px dashed #1976d2" }}
-              >
+              <DashedBox p={2} mb={2} key={index}>
                 <Box
                   mb={2}
                   display="flex"
@@ -90,11 +120,10 @@ const ModeratorDashboard = () => {
                 >
                   <Typography>Face No {index + 1}</Typography>
                 </Box>
-                <TextField
+                <Input
                   value={newDice.diceFaces[index].color}
                   required
                   disabled={loading}
-                  sx={{ width: "100%", marginBottom: 3 }}
                   label="Color"
                   variant="outlined"
                   onChange={(ev) => {
@@ -110,11 +139,10 @@ const ModeratorDashboard = () => {
                     }));
                   }}
                 />
-                <TextField
+                <Input
                   required
                   value={newDice.diceFaces[index].value}
                   disabled={loading}
-                  sx={{ width: "100%", marginBottom: 3 }}
                   label="Value"
                   variant="outlined"
                   onChange={(ev) => {
@@ -150,7 +178,7 @@ const ModeratorDashboard = () => {
                   }
                   label="Is winning face?"
                 />
-              </Box>
+              </DashedBox>
             );
           })}
           <Button
@@ -172,35 +200,12 @@ const ModeratorDashboard = () => {
         <Button
           variant="contained"
           sx={{ marginRight: 1 }}
-          onClick={() => {
-            makeApiCall(
-              {
-                route: "/dice",
-                options: {
-                  method: "POST",
-                  headers: {
-                    Authorization: `Bearer ${getToken()}`,
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify(newDice),
-                },
-              },
-              {
-                callback: (data) => {
-                  console.log(data);
-                  setNewDice(DEFAULT_DICE_VALUES);
-                },
-                message: "Successfully created a new preset!",
-              }
-            );
-          }}
+          onClick={handleSubmit}
           disabled={loading}
         >
           Submit Dice
         </Button>
-        <Button onClick={() => setNewDice(DEFAULT_DICE_VALUES)}>
-          Clear form
-        </Button>{" "}
+        <Button onClick={handleClearForm}>Clear form</Button>
       </Box>
     </Layout>
   );

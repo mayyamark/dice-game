@@ -20,7 +20,7 @@ const Login: React.FC = () => {
 
   const { setUser: setAuth } = useAuth();
 
-  const { loading, makeApiCall } = useFetch();
+  const { makeApiCall } = useFetch();
 
   const successCallback = (data: IAuthResponse) => {
     setToken(data.access_token);

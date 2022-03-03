@@ -2,7 +2,6 @@ import { styled } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
-import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import { useEffect, useState } from "react";
 import {
@@ -15,6 +14,7 @@ import { getToken } from "../../services/manage-token";
 import AppBar from "../common/AppBar/AppBar";
 import { FullScreenLayout, Layout } from "../common/Layout/Layout";
 import Dice from "../Dice/Dice";
+import DiceOptions from "../DiceOptions/DiceOptions";
 
 const Wrapper = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -32,21 +32,12 @@ const PlayBox = styled(Box)(({ theme }) => ({
   marginBottom: theme.spacing(5),
 }));
 
-const OptionsWrapper = styled(Paper)(({ theme }) => ({
-  "& > *": {
-    marginBottom: theme.spacing(2),
-  },
+const YouWon = styled(Typography)(({ theme }) => ({
+  fontSize: 30,
+  fontWeight: "bold",
+  color: "success.main",
+  marginBottom: theme.spacing(5),
 }));
-
-const OptionWrapper = styled(Box)({
-  cursor: "pointer",
-  "& :hover": {
-    backgroundColor: "#bbdefb",
-    "& > *": {
-      backgroundColor: "#bbdefb",
-    },
-  },
-});
 
 const Play = () => {
   const [options, setOptions] = useState<IGetAllDiceResponse | null>(null);
@@ -113,18 +104,7 @@ const Play = () => {
               diceStyles={{ backgroundColor: face?.color }}
               faceStyles={{ backgroundColor: face?.color }}
             />
-            {face?.winning === "true" && (
-              <Typography
-                sx={{
-                  fontSize: 30,
-                  fontWeight: "bold",
-                  color: "success.main",
-                  marginBottom: 5,
-                }}
-              >
-                YOU WON!
-              </Typography>
-            )}
+            {face?.winning === "true" && <YouWon>YOU WON!</YouWon>}
           </Wrapper>
           <Button
             variant="contained"
@@ -135,57 +115,14 @@ const Play = () => {
           </Button>
         </PlayBox>
       )}
-      <OptionsWrapper elevation={3}>
-        <Typography variant="h2" textAlign="center">
-          Dice options
-        </Typography>
-
-        {options?.[0]?.map((option, index) => (
-          <OptionWrapper
-            sx={{
-              border:
-                selectedOption?.id === option.id ? "2px solid #1976d2" : "none",
-            }}
-            onClick={() => {
-              setSelectedOption(option);
-              setFace(option.diceFaces[0]);
-            }}
-            key={option.id}
-          >
-            <Box p={3}>
-              <Typography variant="h5">
-                Dice No <b>{index + 1}</b>
-              </Typography>
-              <Typography>
-                Dice shape: <b>{option.shape}</b>
-              </Typography>
-              <Typography>
-                Number of faces: <b>{option.faces}</b>
-              </Typography>
-              <Typography>Faces:</Typography>
-              <Box pl={3}>
-                {option.diceFaces.map((face) => (
-                  <Box mb={2}>
-                    <Typography>
-                      Color: <b>{face.color}</b>
-                    </Typography>
-                    <Typography>
-                      Value: <b>{face.value}</b>
-                    </Typography>
-                    {face.winning === "true" ? (
-                      <Typography
-                        sx={{ color: "success.main", fontWeight: "bold" }}
-                      >
-                        WINNING FACE!
-                      </Typography>
-                    ) : null}
-                  </Box>
-                ))}
-              </Box>
-            </Box>
-          </OptionWrapper>
-        ))}
-      </OptionsWrapper>
+      <DiceOptions
+        options={options}
+        selectedOption={selectedOption}
+        onClick={(option) => {
+          setSelectedOption(option);
+          setFace(option.diceFaces[0]);
+        }}
+      />
     </Layout>
   );
 };

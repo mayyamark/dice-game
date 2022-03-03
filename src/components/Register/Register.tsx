@@ -21,7 +21,7 @@ const Register: React.FC = () => {
     passwordConfirm: "",
   });
 
-  const { loading, makeApiCall } = useFetch();
+  const { makeApiCall } = useFetch();
 
   const { setUser: setAuth } = useAuth();
 
