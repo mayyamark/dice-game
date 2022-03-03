@@ -50,10 +50,10 @@ const Login: React.FC = () => {
       {
         callback: (data) => {
           console.log(data);
-          successCallback(data);
+          successCallback(data as IAuthResponse);
         },
         message: "Welcome!",
-        redirect: () => navigate("/"),
+        redirect: () => navigate("/play"),
       }
     );
   };

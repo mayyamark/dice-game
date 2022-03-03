@@ -1,6 +1,6 @@
 import { Typography } from "@mui/material";
 import { useState } from "react";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import RequireAuth from "./components/common/RequireAuth/RequireAuth";
 import Login from "./components/Login/Login";
@@ -15,10 +15,6 @@ function App() {
     <BrowserRouter>
       <AuthContext.Provider value={{ user, setUser }}>
         <Routes>
-          <Route
-            path="/"
-            element={<Navigate to={user ? "/play" : "/login"} />}
-          />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/register" element={<Register />} />

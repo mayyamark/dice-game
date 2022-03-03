@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { API_BASE_URL } from "../common/constants";
-import { IAuthResponse } from "../common/types";
+import { IAuthResponse, IGetAllDiceResponse } from "../common/types";
 import { useSnackbar } from "../context/SnackbarContext";
 
 interface IHttpOptions {
@@ -9,9 +9,9 @@ interface IHttpOptions {
 }
 
 interface ISuccessOptions {
-  callback: (data: IAuthResponse) => void;
-  message: string;
-  redirect: () => void;
+  callback: (data: IAuthResponse | IGetAllDiceResponse) => void;
+  message?: string;
+  redirect?: () => void;
 }
 
 const useFetch = () => {
@@ -38,11 +38,13 @@ const useFetch = () => {
       .then(() => {
         setLoading(false);
 
-        openSnackbar({
-          severity: "success",
-          message,
-          open: true,
-        });
+        if (message) {
+          openSnackbar({
+            severity: "success",
+            message,
+            open: true,
+          });
+        }
 
         if (redirect) {
           redirect();

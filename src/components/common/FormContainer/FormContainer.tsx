@@ -3,6 +3,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import TextField from "@mui/material/TextField";
 import { styled } from "@mui/system";
 import React, { ChangeEvent, ReactNode } from "react";
+import { FullScreenLayout } from "../Layout/Layout";
 
 const Container = styled(Box)(({ theme }) => ({
   width: "90%",
@@ -27,14 +28,7 @@ interface IProps {
 
 const Login: React.FC<IProps> = ({ fields, buttonText, onClick, children }) => {
   return (
-    <Box
-      minHeight="100vh"
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      flexDirection="column"
-      m="auto"
-    >
+    <FullScreenLayout>
       <Container>
         {fields.map(({ label, icon, onChange, type }) => (
           <TextField
@@ -56,7 +50,7 @@ const Login: React.FC<IProps> = ({ fields, buttonText, onClick, children }) => {
         </Button>
         {children}
       </Container>
-    </Box>
+    </FullScreenLayout>
   );
 };
 
