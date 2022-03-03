@@ -15,6 +15,7 @@ const Container = styled(Box)(({ theme }) => ({
 export interface IField {
   label: string;
   icon: ReactNode;
+  type?: string;
   onChange: (ev: ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -35,10 +36,12 @@ const Login: React.FC<IProps> = ({ fields, buttonText, onClick, children }) => {
       m="auto"
     >
       <Container>
-        {fields.map(({ label, icon, onChange }) => (
+        {fields.map(({ label, icon, onChange, type }) => (
           <TextField
+            key={label}
             sx={{ width: "100%", marginBottom: 3 }}
             label={label}
+            type={type}
             InputProps={{
               startAdornment: icon ? (
                 <InputAdornment position="start">{icon}</InputAdornment>
