@@ -28,11 +28,11 @@ const useFetch = () => {
     fetch(`${API_BASE_URL}${route}`, options)
       .then((response) => response.json())
       .then((data) => {
-        if (data.message) {
+        if (data.error) {
           console.log(data);
-          throw new Error(data.message);
+          throw new Error(data.error);
         }
-
+        console.log("hoook", data);
         callback(data);
       })
       .then(() => {

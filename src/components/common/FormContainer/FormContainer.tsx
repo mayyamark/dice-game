@@ -1,4 +1,5 @@
-import { Box, Button } from "@mui/material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import InputAdornment from "@mui/material/InputAdornment";
 import TextField from "@mui/material/TextField";
 import { styled } from "@mui/system";
@@ -22,8 +23,8 @@ export interface IField {
 
 interface IProps {
   fields: IField[];
-  buttonText: string;
-  onClick: () => void;
+  buttonText?: string;
+  onClick?: () => void;
 }
 
 const Login: React.FC<IProps> = ({ fields, buttonText, onClick, children }) => {
@@ -45,9 +46,11 @@ const Login: React.FC<IProps> = ({ fields, buttonText, onClick, children }) => {
             onChange={onChange}
           />
         ))}
-        <Button fullWidth variant="contained" onClick={onClick}>
-          {buttonText}
-        </Button>
+        {buttonText && onClick && (
+          <Button fullWidth variant="contained" onClick={onClick}>
+            {buttonText}
+          </Button>
+        )}
         {children}
       </Container>
     </FullScreenLayout>

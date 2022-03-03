@@ -1,8 +1,9 @@
-import { styled, Typography } from "@mui/material";
+import { styled } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
 import Paper from "@mui/material/Paper";
+import Typography from "@mui/material/Typography";
 import { useEffect, useState } from "react";
 import {
   IAllDiceResults,
@@ -11,6 +12,7 @@ import {
 } from "../../common/types";
 import useFetch from "../../hook/useFetch";
 import { getToken } from "../../services/manage-token";
+import AppBar from "../common/AppBar/AppBar";
 import { FullScreenLayout, Layout } from "../common/Layout/Layout";
 import Dice from "../Dice/Dice";
 
@@ -102,10 +104,15 @@ const Play = () => {
 
   return (
     <Layout>
+      <AppBar linkHref="/dashboard" linkText="Create preset" />
       {selectedOption && (
         <PlayBox>
           <Wrapper>
-            <Dice value={face?.value || ""} />
+            <Dice
+              value={face?.value || ""}
+              diceStyles={{ backgroundColor: face?.color }}
+              faceStyles={{ backgroundColor: face?.color }}
+            />
             {face?.winning === "true" && (
               <Typography
                 sx={{
@@ -135,10 +142,15 @@ const Play = () => {
 
         {options?.[0]?.map((option, index) => (
           <OptionWrapper
+            sx={{
+              border:
+                selectedOption?.id === option.id ? "2px solid #1976d2" : "none",
+            }}
             onClick={() => {
               setSelectedOption(option);
               setFace(option.diceFaces[0]);
             }}
+            key={option.id}
           >
             <Box p={3}>
               <Typography variant="h5">

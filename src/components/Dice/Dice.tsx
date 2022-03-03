@@ -4,8 +4,8 @@ import CircularProgress from "@mui/material/CircularProgress";
 
 interface IProps {
   value?: string;
-  diceStyles?: { [key: string]: string };
-  faceStyles?: { [key: string]: string };
+  diceStyles?: { [key: string]: string | undefined };
+  faceStyles?: { [key: string]: string | undefined };
 }
 
 const Dice = styled(Box)(({ theme }) => ({
@@ -24,11 +24,24 @@ const Face = styled(Typography)({
   fontSize: 50,
 });
 
+const LoaderContainer = styled(Box)({
+  width: 200,
+  height: 200,
+  borderRadius: "3px solid white",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+});
+
 const CustomDice: React.FC<IProps> = ({ value, diceStyles, faceStyles }) => {
-  return (
+  return value ? (
     <Dice style={diceStyles}>
-      {value ? <Face style={faceStyles}>{value}</Face> : <CircularProgress />}
+      <Face style={faceStyles}>{value}</Face>
     </Dice>
+  ) : (
+    <LoaderContainer>
+      <CircularProgress />
+    </LoaderContainer>
   );
 };
 
