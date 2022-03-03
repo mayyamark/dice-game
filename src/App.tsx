@@ -1,7 +1,6 @@
 import { Typography } from "@mui/material";
 import { useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import "./App.css";
 import RequireAuth from "./components/common/RequireAuth/RequireAuth";
 import Login from "./components/Login/Login";
 import Play from "./components/Play/Play";

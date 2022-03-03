@@ -22,7 +22,6 @@ const Dice = styled(Box)(({ theme }) => ({
 const Face = styled(Typography)({
   color: "#000",
   fontSize: 50,
-  fontFamily: "Georgia",
 });
 
 const CustomDice: React.FC<IProps> = ({ value, diceStyles, faceStyles }) => {
