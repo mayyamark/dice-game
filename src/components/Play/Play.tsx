@@ -1,18 +1,17 @@
 import { styled } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
 import { useEffect, useState } from "react";
 import {
   IAllDiceResults,
-  IDiceFace,
   IGetAllDiceResponse,
+  IHistoryResponse,
 } from "../../common/types";
 import useFetch from "../../hook/useFetch";
 import { getToken } from "../../services/manage-token";
 import AppBar from "../common/AppBar/AppBar";
-import { FullScreenLayout, Layout } from "../common/Layout/Layout";
+import { Layout } from "../common/Layout/Layout";
 import Dice from "../Dice/Dice";
 import DiceOptions from "../DiceOptions/DiceOptions";
 
@@ -35,7 +34,7 @@ const PlayBox = styled(Box)(({ theme }) => ({
 const YouWon = styled(Typography)(({ theme }) => ({
   fontSize: 30,
   fontWeight: "bold",
-  color: "success.main",
+  color: "#66bb6a",
   marginBottom: theme.spacing(5),
 }));
 
@@ -43,7 +42,7 @@ const Play = () => {
   const [options, setOptions] = useState<IGetAllDiceResponse | null>(null);
   const [selectedOption, setSelectedOption] =
     useState<IAllDiceResults | null>(null);
-  const [face, setFace] = useState<IDiceFace | null>(null);
+  const [face, setFace] = useState<IHistoryResponse | null>(null);
   const [isRolling, setIsRolling] = useState(false);
 
   const { loading, makeApiCall } = useFetch();
@@ -69,29 +68,28 @@ const Play = () => {
   }, []);
 
   const handleClick = () => {
-    setIsRolling(true);
-    setFace(null);
-
-    if (selectedOption && selectedOption.diceFaces) {
-      const result =
-        selectedOption.diceFaces[
-          Math.floor(Math.random() * selectedOption.diceFaces.length)
-        ];
-
-      setTimeout(() => {
-        setFace(result);
-        setIsRolling(false);
-      }, 1000);
+    if (selectedOption) {
+      makeApiCall(
+        {
+          route: "/history",
+          options: {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${getToken()}`,
+            },
+            body: JSON.stringify({ diceId: selectedOption.id }),
+          },
+        },
+        {
+          callback: (data) => {
+            console.log(data);
+            setFace(data as IHistoryResponse);
+          },
+        }
+      );
     }
   };
-
-  if (loading) {
-    return (
-      <FullScreenLayout>
-        <CircularProgress />
-      </FullScreenLayout>
-    );
-  }
 
   return (
     <Layout>
@@ -100,11 +98,11 @@ const Play = () => {
         <PlayBox>
           <Wrapper>
             <Dice
-              value={face?.value || ""}
+              value={face?.value || face?.result}
               diceStyles={{ backgroundColor: face?.color }}
               faceStyles={{ backgroundColor: face?.color }}
             />
-            {face?.winning === "true" && <YouWon>YOU WON!</YouWon>}
+            <YouWon>{face?.winning === "true" ? "YOU WON!" : ""}</YouWon>
           </Wrapper>
           <Button
             variant="contained"
@@ -121,6 +119,7 @@ const Play = () => {
         onClick={(option) => {
           setSelectedOption(option);
           setFace(option.diceFaces[0]);
+          window.scroll(0, 0);
         }}
       />
     </Layout>

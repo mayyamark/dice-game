@@ -21,7 +21,7 @@ const OptionWrapper = styled(Box)({
 });
 
 const WinningFace = styled(Typography)({
-  color: "success.main",
+  color: "#66bb6a",
   fontWeight: "bold",
 });
 

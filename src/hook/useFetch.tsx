@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { API_BASE_URL } from "../common/constants";
-import { IAuthResponse, IGetAllDiceResponse } from "../common/types";
+import {
+  IAuthResponse,
+  IGetAllDiceResponse,
+  IHistoryResponse,
+} from "../common/types";
 import { useSnackbar } from "../context/SnackbarContext";
 
 interface IHttpOptions {
@@ -9,7 +13,9 @@ interface IHttpOptions {
 }
 
 interface ISuccessOptions {
-  callback: (data: IAuthResponse | IGetAllDiceResponse) => void;
+  callback: (
+    data: IAuthResponse | IGetAllDiceResponse | IHistoryResponse
+  ) => void;
   message?: string;
   redirect?: () => void;
 }

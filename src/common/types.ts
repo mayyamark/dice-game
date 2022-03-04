@@ -16,11 +16,21 @@ export interface IDiceFace {
   winning: string;
 }
 
-export interface IAllDiceResults {
+interface IAllDiceResultsCore {
   id: string;
   faces: string;
   shape: string;
+}
+
+export interface IAllDiceResults extends IAllDiceResultsCore {
   diceFaces: IDiceFace[];
 }
 
 export type IGetAllDiceResponse = [IAllDiceResults[], number];
+
+export interface IHistoryResponse extends IDiceFace {
+  result?: string;
+  matchId?: string | null;
+  userId?: string;
+  dice?: IAllDiceResultsCore;
+}

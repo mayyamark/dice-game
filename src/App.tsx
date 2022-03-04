@@ -17,9 +17,14 @@ function App() {
       <AuthContext.Provider value={{ user, setUser }}>
         <SnackbarProvider>
           <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/register" element={<Register />} />
+            <Route
+              path="/"
+              element={
+                <RequireAuth redirectTo={"/login"}>
+                  <Play />
+                </RequireAuth>
+              }
+            />
             <Route
               path="/play"
               element={
@@ -28,6 +33,9 @@ function App() {
                 </RequireAuth>
               }
             />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/register" element={<Register />} />
             <Route
               path="/dashboard"
               element={
