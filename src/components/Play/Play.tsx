@@ -43,7 +43,6 @@ const Play = () => {
   const [selectedOption, setSelectedOption] =
     useState<IAllDiceResults | null>(null);
   const [face, setFace] = useState<IHistoryResponse | null>(null);
-  const [isRolling, setIsRolling] = useState(false);
 
   const { loading, makeApiCall } = useFetch();
 
@@ -104,12 +103,8 @@ const Play = () => {
             />
             <YouWon>{face?.winning === "true" ? "YOU WON!" : ""}</YouWon>
           </Wrapper>
-          <Button
-            variant="contained"
-            disabled={isRolling}
-            onClick={handleClick}
-          >
-            {isRolling ? "Rolling..." : "Roll Dice!"}
+          <Button variant="contained" disabled={loading} onClick={handleClick}>
+            {loading ? "Rolling..." : "Roll Dice!"}
           </Button>
         </PlayBox>
       )}
